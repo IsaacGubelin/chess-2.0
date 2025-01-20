@@ -10,6 +10,8 @@ import java.util.Objects;
  */
 public class ChessPosition {
 
+    private final int GRID_SIZE = 8;
+
     public ChessPosition(int row, int col) {
         this.row = row;
         this.col = col;
@@ -36,6 +38,49 @@ public class ChessPosition {
      */
     public int getColumn() {
         return this.col;
+    }
+
+    /**
+     * Check that the row and column are valid
+     */
+    public boolean isInBounds() {
+        return (row <= GRID_SIZE && row > 0 && col <= GRID_SIZE && col > 0);
+    }
+    /**
+     * Increment the row
+     */
+    public void incRow() {
+        row += 1;
+    }
+
+    /**
+     * Decrement the row
+     */
+    public void decRow() {
+        row -= 1;
+    }
+
+    /**
+     * Increment the column
+     */
+    public void incCol() {
+        col += 1;
+    }
+
+    /**
+     * Decrement the column
+     */
+    public void decCol() {
+        col -= 1;
+    }
+
+    /**
+     * Get a copy of this chess position object
+     * @return clone of chess position
+     */
+    @Override
+    public ChessPosition clone() {
+        return new ChessPosition(row, col);
     }
 
 

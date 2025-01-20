@@ -13,7 +13,7 @@ public class ChessBoard {
     public static final int GRID_SIZE = 8;
 
     public ChessBoard() {
-        this.grid = new ChessPiece[GRID_SIZE][GRID_SIZE];
+        grid = new ChessPiece[GRID_SIZE][GRID_SIZE];
     }
 
     private ChessPiece[][] grid;
@@ -36,22 +36,38 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        return this.grid[position.getRow() - 1][position.getColumn() - 1];
+        return grid[position.getRow() - 1][position.getColumn() - 1];
     }
 
     /**
-     * Sets the board to the default starting board
-     * (How the game of chess normally starts)
+     * Remove a chess piece from the chessboard
+     *
+     * @param position The position to remove the piece from
      */
-    public void resetBoard() {
-        // Reset middle of board to null
-        for (int r = 2; r < GRID_SIZE - 2 ; r++) {
-            for (int c = 0; c < GRID_SIZE; c++) {
-                grid[r][c] = null;
-            }
-        }
+    public void removePiece(ChessPosition position) {
+        grid[position.getRow() - 1][position.getColumn() - 1] = null;
+    }
 
-        // Add White chess pieces to bottom row
+    /**
+     * Check if piece exists at given position
+     *
+     * @param position Position to check
+     */
+    public boolean hasPieceAtPos(ChessPosition position) {
+        return (this.grid[position.getRow() - 1][position.getColumn() - 1] != null);
+    }
+
+    public boolean hasRivalAtPos(ChessPosition position, ChessGame.TeamColor color) {
+        if (!hasPieceAtPos(position)) {
+            return false;
+        }
+        return !getPiece(position).getTeamColor().equals(color);
+    }
+
+    /**
+     * Set up the white team chess pieces on the first two rows
+     */
+    private void setUpWhitePieces() {
         grid[0][0] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
         grid[0][1] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
         grid[0][2] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
@@ -60,8 +76,12 @@ public class ChessBoard {
         grid[0][5] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
         grid[0][6] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
         grid[0][7] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
+    }
 
-        // Add Black chess pieces to top row
+    /**
+     * Set up the black team chess pieces on the last two rows
+     */
+    private void setUpBlackPieces() {
         grid[7][0] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
         grid[7][1] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
         grid[7][2] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
@@ -70,13 +90,36 @@ public class ChessBoard {
         grid[7][5] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
         grid[7][6] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
         grid[7][7] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
+    }
 
-        // Add all pawn pieces to board
+    /**
+     * Set up the pawns for both teams
+     */
+    private void setUpPawns() {
         for (int col = 0; col < 8; col++) {
             grid[1][col] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
             grid[6][col] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
         }
+    }
 
+    /**
+     * Clear the middle four rows of the chessboard
+     */
+    private void clearMiddleRows() {
+        for (int r = 2; r < GRID_SIZE - 2; r++) {
+            Arrays.fill(grid[r], null);
+        }
+    }
+
+    /**
+     * Sets the board to the default starting board
+     * (How the game of chess normally starts)
+     */
+    public void resetBoard() {
+        clearMiddleRows();
+        setUpWhitePieces();
+        setUpBlackPieces();
+        setUpPawns();
     }
 
     @Override

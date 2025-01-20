@@ -1,9 +1,9 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
-
-import chess.ChessGame.TeamColor;
+import chess.moves.BishopMovesCalc;
 
 /**
  * Represents a single chess piece
@@ -59,7 +59,16 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        HashSet<ChessMove> moves = new HashSet<>();
+
+        switch (board.getPiece(myPosition).getPieceType()) {
+            case BISHOP -> {
+                BishopMovesCalc bishopCalc = new BishopMovesCalc();
+                moves.addAll(bishopCalc.getBishopMoves(board, myPosition));
+            }
+        }
+
+        return moves;
     }
 
     @Override
