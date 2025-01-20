@@ -1,28 +1,55 @@
 package chess.moves;
-import chess.*;
+import chess.ChessBoard;
+import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 
 import java.util.Collection;
 import java.util.HashSet;
 
 public class BishopMovesCalc {
 
+    private final int UP = 1;
+    private final int LEFT = -1;
+    private final int DOWN = -1;
+    private final int RIGHT = 1;
+
     /**
      * Take a position for a bishop and evaluate all possible squares it can move to
      *
-     * @param board
-     * @param currPos
-     * @return
+     * @param board the chessboard and pieces
+     * @param currPos position where bishop currently sits
+     * @return set of all available moves
      */
     public Collection<ChessMove> getBishopMoves(ChessBoard board, ChessPosition currPos) {
         HashSet<ChessMove> possibleMoves = new HashSet<>();
 
-        ChessGame.TeamColor team = board.getPiece(currPos).getTeamColor();
+        possibleMoves.addAll(getDiagonalMoves(board, currPos, UP, RIGHT));
+        possibleMoves.addAll(getDiagonalMoves(board, currPos, UP, LEFT));
+        possibleMoves.addAll(getDiagonalMoves(board, currPos, DOWN, LEFT));
+        possibleMoves.addAll(getDiagonalMoves(board, currPos, DOWN, RIGHT));
+        return possibleMoves;
+    }
+
+    /**
+     * Helper method to look for available moves in a diagonal direction on the board
+     *
+     * @param board current chessboard
+     * @param currPos start position for move
+     * @param rowOffset +1 or -1 for indicating search up/down
+     * @param colOffset +1 or -1 for indicating search left/right
+     * @return all moves in requested diagonal direction
+     */
+    private Collection<ChessMove> getDiagonalMoves(ChessBoard board, ChessPosition currPos, int rowOffset, int colOffset) {
+        HashSet<ChessMove> possibleMoves = new HashSet<>();
         int r = currPos.getRow();
         int c = currPos.getColumn();
+        ChessGame.TeamColor team = board.getPiece(currPos).getTeamColor();
 
-        // Start checking ^> direction
-        ChessPosition endPos = new ChessPosition(r + 1, c + 1);
+        // Set position of interest one diagonal space away and continue searching in that direction
+        ChessPosition endPos = new ChessPosition(r + rowOffset, c + colOffset);
         while (endPos.isInBounds()) {
+
             // Check if the current position of interest has a piece
             if (board.hasPieceAtPos(endPos)) {
                 // If the encountered piece in this direction is a rival, add possible capture move
@@ -34,48 +61,20 @@ public class BishopMovesCalc {
             }
             // Space must be empty. Add to collection and keep checking for more available moves.
             possibleMoves.add(new ChessMove(currPos, endPos.clone(), null));
-            endPos.incRow(); // Move position pointer up
-            endPos.incCol(); // and to the right
-        }
-
-        endPos = new ChessPosition(r + 1, c - 1); // Check <^ direction
-        while (endPos.isInBounds()) {
-            if (board.hasPieceAtPos(endPos)) {
-                if (board.hasRivalAtPos(endPos, team)) {
-                    possibleMoves.add(new ChessMove(currPos, endPos.clone(), null));
-                }
-                break;
-            }
-            possibleMoves.add(new ChessMove(currPos, endPos.clone(), null));
-            endPos.incRow();
-            endPos.decCol();
-        }
-
-        endPos = new ChessPosition(r - 1, c - 1); // Check <v direction
-        while (endPos.isInBounds()) {
-            if (board.hasPieceAtPos(endPos)) {
-                if (board.hasRivalAtPos(endPos, team)) {
-                    possibleMoves.add(new ChessMove(currPos, endPos.clone(), null));
-                }
-                break;
-            }
-            possibleMoves.add(new ChessMove(currPos, endPos.clone(), null));
-            endPos.decRow();
-            endPos.decCol();
-        }
-
-        endPos = new ChessPosition(r - 1, c + 1); // Check v> direction
-        while (endPos.isInBounds()) {
-            if (board.hasPieceAtPos(endPos)) {
-                if (board.hasRivalAtPos(endPos, team)) {
-                    possibleMoves.add(new ChessMove(currPos, endPos.clone(), null));
-                }
-                break;
-            }
-            possibleMoves.add(new ChessMove(currPos, endPos.clone(), null));
-            endPos.decRow();
-            endPos.incCol();
+            moveToNextPosition(endPos, rowOffset, colOffset);
         }
         return possibleMoves;
+    }
+
+    /**
+     * Helper to move a position pointer in the direction a search is being made
+     *
+     * @param pos ChessPosition object
+     * @param rowOffset indicate up/down movement
+     * @param colOffset indicate left/right movement
+     */
+    private void moveToNextPosition(ChessPosition pos, int rowOffset, int colOffset) {
+        if (rowOffset == UP) pos.incRow(); else pos.decRow();
+        if (colOffset == RIGHT) pos.incCol(); else pos.decCol();
     }
 }
