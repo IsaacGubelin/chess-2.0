@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import chess.moves.BishopMovesCalc;
+import chess.moves.RookMovesCalc;
 
 /**
  * Represents a single chess piece
@@ -62,6 +63,10 @@ public class ChessPiece {
         HashSet<ChessMove> moves = new HashSet<>();
 
         switch (board.getPiece(myPosition).getPieceType()) {
+            case ROOK -> {
+                RookMovesCalc rookCalc = new RookMovesCalc();
+                moves.addAll(rookCalc.getRookMoves(board, myPosition));
+            }
             case BISHOP -> {
                 BishopMovesCalc bishopCalc = new BishopMovesCalc();
                 moves.addAll(bishopCalc.getBishopMoves(board, myPosition));
