@@ -74,6 +74,10 @@ public class ChessPiece {
                 BishopMovesCalc bishopCalc = new BishopMovesCalc();
                 moves.addAll(bishopCalc.getBishopMoves(board, myPosition));
             }
+            case QUEEN -> {
+                QueenMovesCalc queenCalc = new QueenMovesCalc();
+                moves.addAll(queenCalc.getQueenMoves(board, myPosition));
+            }
         }
 
         return moves;
