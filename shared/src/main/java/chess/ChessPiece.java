@@ -3,8 +3,7 @@ package chess;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
-import chess.moves.BishopMovesCalc;
-import chess.moves.RookMovesCalc;
+import chess.moves.*;
 
 /**
  * Represents a single chess piece
@@ -66,6 +65,10 @@ public class ChessPiece {
             case ROOK -> {
                 RookMovesCalc rookCalc = new RookMovesCalc();
                 moves.addAll(rookCalc.getRookMoves(board, myPosition));
+            }
+            case KNIGHT -> {
+                KnightMovesCalc knightCalc = new KnightMovesCalc();
+                moves.addAll(knightCalc.getKnightMoves(board, myPosition));
             }
             case BISHOP -> {
                 BishopMovesCalc bishopCalc = new BishopMovesCalc();

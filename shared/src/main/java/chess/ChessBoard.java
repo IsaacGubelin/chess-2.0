@@ -51,12 +51,19 @@ public class ChessBoard {
     /**
      * Check if piece exists at given position
      *
-     * @param position Position to check
+     * @param position square to check
      */
     public boolean hasPieceAtPos(ChessPosition position) {
         return (this.grid[position.getRow() - 1][position.getColumn() - 1] != null);
     }
 
+    /**
+     * Check
+     *
+     * @param position square to check
+     * @param color team color to compare against
+     * @return true if space is occupied by opposing team of given team
+     */
     public boolean hasRivalAtPos(ChessPosition position, ChessGame.TeamColor color) {
         if (!hasPieceAtPos(position)) {
             return false;
