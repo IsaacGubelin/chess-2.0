@@ -8,13 +8,9 @@ import chess.ChessPosition;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class RookMovesCalc {
+public class RookMovesCalc implements MovesCalc {
 
-    private final int UP = 1;
-    private final int LEFT = -1;
-    private final int DOWN = -1;
-    private final int RIGHT = 1;
-    private final int SAME_LINE = 0;
+
 
     /**
      * Take a position for a rook and evaluate all available moves

@@ -23,36 +23,20 @@ public class KnightMovesCalc implements MovesCalc{
         int c = currPos.getColumn();
         ChessGame.TeamColor team = board.getPiece(currPos).getTeamColor();
 
-        ChessPosition endPos = new ChessPosition(r + 2, c - 1);
-        checkPosAndAdd(possibleMoves, board, currPos, endPos);
-        endPos = new ChessPosition(r + 2, c + 1);
-        checkPosAndAdd(possibleMoves, board, currPos, endPos);
-        endPos = new ChessPosition(r + 1, c - 2);
-        checkPosAndAdd(possibleMoves, board, currPos, endPos);
-        endPos = new ChessPosition(r + 1, c + 2);
-        checkPosAndAdd(possibleMoves, board, currPos, endPos);
-        endPos = new ChessPosition(r - 1, c - 2);
-        checkPosAndAdd(possibleMoves, board, currPos, endPos);
-        endPos = new ChessPosition(r - 1, c + 2);
-        checkPosAndAdd(possibleMoves, board, currPos, endPos);
-        endPos = new ChessPosition(r - 2, c - 1);
-        checkPosAndAdd(possibleMoves, board, currPos, endPos);
-        endPos = new ChessPosition(r - 2, c + 1);
-        checkPosAndAdd(possibleMoves, board, currPos, endPos);
+        final int[][] knightOffsets = {
+                {2, -1}, {2, 1}, {1, -2}, {1, 2}, {-1, -2}, {-1, 2}, {-2, -1}, {-2, 1}
+        };
+
+        // Evaluate each possible move
+        for (int[] offset : knightOffsets) {
+            int newRow = currPos.getRow() + offset[0];
+            int newCol = currPos.getColumn() + offset[1];
+            ChessPosition endPos = new ChessPosition(newRow, newCol);
+            checkMoveAndAdd(possibleMoves, board, currPos, endPos);
+        }
         return possibleMoves;
     }
 
-    /**
-     * Check if a piece can move from the start to the end position and add the move if valid.
-     * @param moves collection of moves to add to
-     * @param board current arrangment of chess pieces
-     * @param start old position
-     * @param end potential new position
-     */
-    void checkPosAndAdd(HashSet<ChessMove> moves, ChessBoard board, ChessPosition start, ChessPosition end) {
-        if (isClaimablePos(board, new ChessMove(start, end, null))) {
-            moves.add(new ChessMove(start, end.clone(), null));
-        }
-    }
+
 
 }

@@ -7,12 +7,8 @@ import chess.ChessPosition;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class BishopMovesCalc {
+public class BishopMovesCalc implements MovesCalc {
 
-    private final int UP = 1;
-    private final int LEFT = -1;
-    private final int DOWN = -1;
-    private final int RIGHT = 1;
 
     /**
      * Take a position for a bishop and evaluate all possible squares it can move to
