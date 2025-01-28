@@ -5,7 +5,6 @@ import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
 
-import java.util.Collection;
 import java.util.HashSet;
 
 public class RookMovesCalc implements MovesCalc {
@@ -19,7 +18,7 @@ public class RookMovesCalc implements MovesCalc {
      * @param currPos position where rook currently sits
      * @return set of available moves for rook
      */
-    public Collection<ChessMove> getRookMoves(ChessBoard board, ChessPosition currPos) {
+    public HashSet<ChessMove> getRookMoves(ChessBoard board, ChessPosition currPos) {
         HashSet<ChessMove> possibleMoves = new HashSet<>();
 
         possibleMoves.addAll(getOrthogonalMoves(board, currPos, UP, SAME_LINE));
@@ -37,7 +36,7 @@ public class RookMovesCalc implements MovesCalc {
      * @param colOffset +1 or -1 for indicating search left/right
      * @return all moves in requested orthogonal direction
      */
-    private Collection<ChessMove> getOrthogonalMoves(ChessBoard board, ChessPosition currPos, int rowOffset, int colOffset) {
+    private HashSet<ChessMove> getOrthogonalMoves(ChessBoard board, ChessPosition currPos, int rowOffset, int colOffset) {
         HashSet<ChessMove> possibleMoves = new HashSet<>();
         int r = currPos.getRow();
         int c = currPos.getColumn();

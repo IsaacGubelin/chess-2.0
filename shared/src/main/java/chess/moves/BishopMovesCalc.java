@@ -4,7 +4,6 @@ import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
 
-import java.util.Collection;
 import java.util.HashSet;
 
 public class BishopMovesCalc implements MovesCalc {
@@ -17,7 +16,7 @@ public class BishopMovesCalc implements MovesCalc {
      * @param currPos position where bishop currently sits
      * @return set of all available moves
      */
-    public Collection<ChessMove> getBishopMoves(ChessBoard board, ChessPosition currPos) {
+    public HashSet<ChessMove> getBishopMoves(ChessBoard board, ChessPosition currPos) {
         HashSet<ChessMove> possibleMoves = new HashSet<>();
 
         possibleMoves.addAll(getDiagonalMoves(board, currPos, UP, RIGHT));
@@ -36,7 +35,7 @@ public class BishopMovesCalc implements MovesCalc {
      * @param colOffset +1 or -1 for indicating search left/right
      * @return all moves in requested diagonal direction
      */
-    private Collection<ChessMove> getDiagonalMoves(ChessBoard board, ChessPosition currPos, int rowOffset, int colOffset) {
+    private HashSet<ChessMove> getDiagonalMoves(ChessBoard board, ChessPosition currPos, int rowOffset, int colOffset) {
         HashSet<ChessMove> possibleMoves = new HashSet<>();
         int r = currPos.getRow();
         int c = currPos.getColumn();
