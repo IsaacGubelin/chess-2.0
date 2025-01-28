@@ -9,11 +9,11 @@ import java.util.HashSet;
 
 public interface MovesCalc {
 
-    final int UP = 1;
-    final int LEFT = -1;
-    final int DOWN = -1;
-    final int RIGHT = 1;
-    final int SAME_LINE = 0;
+    int UP = 1;
+    int LEFT = -1;
+    int DOWN = -1;
+    int RIGHT = 1;
+    int SAME_LINE = 0;
 
     /**
      *  Given a move, this function checks if a chess piece of interest may claim the given new position.
