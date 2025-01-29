@@ -7,6 +7,9 @@ import chess.ChessPosition;
 
 import java.util.HashSet;
 
+/**
+ * TODO: add a description
+ */
 public interface MovesCalc {
 
     int UP = 1;
@@ -35,8 +38,8 @@ public interface MovesCalc {
      * @param end potential new position
      */
     default void checkMoveAndAdd(HashSet<ChessMove> moves, ChessBoard board, ChessPosition start, ChessPosition end) {
-        if (isClaimablePos(board, new ChessMove(start, end, null))) {
-            moves.add(new ChessMove(start, end.clone(), null));
+        if (isClaimablePos(board, new ChessMove(start, end))) {
+            moves.add(new ChessMove(start, end.clone()));
         }
     }
 

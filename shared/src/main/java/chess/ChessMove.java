@@ -17,6 +17,12 @@ public class ChessMove {
         this.promotionType = promotionPiece;
     }
 
+    public ChessMove(ChessPosition startPosition, ChessPosition endPosition) {
+        this.start = startPosition;
+        this.end = endPosition;
+        this.promotionType = null;
+    }
+
     /**
      * Private data
      */
