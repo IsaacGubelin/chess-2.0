@@ -82,7 +82,10 @@ public class ChessPiece {
                 KingMovesCalc kingCalc = new KingMovesCalc();
                 moves.addAll(kingCalc.getKingMoves(board, myPosition));
             }
-            // TODO: Add case for pawn
+            case PAWN -> {
+                PawnMovesCalc pawnCalc = new PawnMovesCalc();
+                moves.addAll(pawnCalc.getPawnMoves(board, myPosition));
+            }
         }
 
         return moves;

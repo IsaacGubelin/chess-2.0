@@ -35,15 +35,10 @@ public class PawnMovesCalc {
         // Check for ordinary forward move availability. A promotion may occur if pawn is in row 2.
         if (r > 1 && !board.hasPieceAtPos(r - 1, c)) {
             // Check if pawn is about to reach last row. If so, add promotion piece moves.
-            if (r == 2) {
-                moves.add(new ChessMove(currPos, new ChessPosition(r - 1, c), ChessPiece.PieceType.ROOK));
-                moves.add(new ChessMove(currPos, new ChessPosition(r - 1, c), ChessPiece.PieceType.KNIGHT));
-                moves.add(new ChessMove(currPos, new ChessPosition(r - 1, c), ChessPiece.PieceType.BISHOP));
-                moves.add(new ChessMove(currPos, new ChessPosition(r - 1, c), ChessPiece.PieceType.QUEEN));
-            }
-            else { // Otherwise, add just a standard forward move.
+            if (r == 2)
+                addPromotionMoves(moves, currPos, new ChessPosition(r - 1, c));
+            else // Otherwise, add just a standard forward move.
                 moves.add(new ChessMove(currPos, new ChessPosition(r - 1, c)));
-            }
         }
 
         // Check for possible capture moves. These may also result in promotion.
@@ -51,29 +46,19 @@ public class PawnMovesCalc {
         if (c > 1 && r > 1 && board.hasPieceAtPos(r - 1, c - 1) &&
                 board.getPiece(new ChessPosition(r - 1, c - 1)).getTeamColor() == ChessGame.TeamColor.WHITE) {
             // Check for promotion possibility
-            if (r == 2) {
-                moves.add(new ChessMove(currPos, new ChessPosition(r - 1, c - 1), ChessPiece.PieceType.ROOK));
-                moves.add(new ChessMove(currPos, new ChessPosition(r - 1, c - 1), ChessPiece.PieceType.KNIGHT));
-                moves.add(new ChessMove(currPos, new ChessPosition(r - 1, c - 1), ChessPiece.PieceType.BISHOP));
-                moves.add(new ChessMove(currPos, new ChessPosition(r - 1, c - 1), ChessPiece.PieceType.QUEEN));
-            }
-            else { // Otherwise, add ordinary forward move
+            if (r == 2)
+                addPromotionMoves(moves, currPos, new ChessPosition(r - 1, c - 1));
+            else // Otherwise, add ordinary forward move
                 moves.add(new ChessMove(currPos, new ChessPosition(r - 1, c - 1)));
-            }
         }
         // Check down and right for enemy white piece. Check that pawn is not at far right of board.
         if (c < 8 && r > 1 && board.hasPieceAtPos(r - 1, c + 1) &&
                 board.getPiece(new ChessPosition(r - 1, c + 1)).getTeamColor() == ChessGame.TeamColor.WHITE) {
             // Check for promotion possibility
-            if (r == 2) {
-                moves.add(new ChessMove(currPos, new ChessPosition(r - 1, c + 1), ChessPiece.PieceType.ROOK));
-                moves.add(new ChessMove(currPos, new ChessPosition(r - 1, c + 1), ChessPiece.PieceType.KNIGHT));
-                moves.add(new ChessMove(currPos, new ChessPosition(r - 1, c + 1), ChessPiece.PieceType.BISHOP));
-                moves.add(new ChessMove(currPos, new ChessPosition(r - 1, c + 1), ChessPiece.PieceType.QUEEN));
-            }
-            else { // Otherwise, add ordinary forward move
+            if (r == 2)
+                addPromotionMoves(moves, currPos, new ChessPosition(r - 1, c + 1));
+            else
                 moves.add(new ChessMove(currPos, new ChessPosition(r - 1, c + 1)));
-            }
         }
         // All possible black pawn moves collected.
         return moves;
@@ -94,15 +79,10 @@ public class PawnMovesCalc {
         // Check for ordinary forward move availability. A promotion may occur if pawn is in row 7.
         if (r < 8 && !board.hasPieceAtPos(r + 1, c)) {
             // Check if pawn is about to reach last row. If so, add promotion piece moves.
-            if (r == 7) {
-                moves.add(new ChessMove(currPos, new ChessPosition(r + 1, c), ChessPiece.PieceType.ROOK));
-                moves.add(new ChessMove(currPos, new ChessPosition(r + 1, c), ChessPiece.PieceType.KNIGHT));
-                moves.add(new ChessMove(currPos, new ChessPosition(r + 1, c), ChessPiece.PieceType.BISHOP));
-                moves.add(new ChessMove(currPos, new ChessPosition(r + 1, c), ChessPiece.PieceType.QUEEN));
-            }
-            else { // Otherwise, add just a standard forward move.
+            if (r == 7)
+                addPromotionMoves(moves, currPos, new ChessPosition(r + 1, c));
+            else
                 moves.add(new ChessMove(currPos, new ChessPosition(r + 1, c)));
-            }
         }
 
         // Check for possible capture moves. These may also result in promotion.
@@ -110,30 +90,33 @@ public class PawnMovesCalc {
         if (c > 1 && r < 8 && board.hasPieceAtPos(r + 1, c - 1) &&
                 board.getPiece(new ChessPosition(r + 1, c - 1)).getTeamColor() == ChessGame.TeamColor.BLACK) {
             // Check for promotion possibility
-            if (r == 7) {
-                moves.add(new ChessMove(currPos, new ChessPosition(r + 1, c - 1), ChessPiece.PieceType.ROOK));
-                moves.add(new ChessMove(currPos, new ChessPosition(r + 1, c - 1), ChessPiece.PieceType.KNIGHT));
-                moves.add(new ChessMove(currPos, new ChessPosition(r + 1, c - 1), ChessPiece.PieceType.BISHOP));
-                moves.add(new ChessMove(currPos, new ChessPosition(r + 1, c - 1), ChessPiece.PieceType.QUEEN));
-            }
-            else { // Otherwise, add ordinary forward move
+            if (r == 7)
+                addPromotionMoves(moves, currPos, new ChessPosition(r + 1, c - 1));
+            else // Otherwise, add ordinary forward move
                 moves.add(new ChessMove(currPos, new ChessPosition(r + 1, c - 1)));
-            }
         }
         // Check up and right for enemy black piece. Check that pawn is not at far right of board.
         if (c < 8 && r < 8 && board.hasPieceAtPos(r + 1, c + 1) &&
                 board.getPiece(new ChessPosition(r + 1, c + 1)).getTeamColor() == ChessGame.TeamColor.BLACK) {
             // Check for promotion possibility
-            if (r == 7) {
-                moves.add(new ChessMove(currPos, new ChessPosition(r + 1, c + 1), ChessPiece.PieceType.ROOK));
-                moves.add(new ChessMove(currPos, new ChessPosition(r + 1, c + 1), ChessPiece.PieceType.KNIGHT));
-                moves.add(new ChessMove(currPos, new ChessPosition(r + 1, c + 1), ChessPiece.PieceType.BISHOP));
-                moves.add(new ChessMove(currPos, new ChessPosition(r + 1, c + 1), ChessPiece.PieceType.QUEEN));
-            }
-            else { // Otherwise, add ordinary forward move
+            if (r == 7)
+                addPromotionMoves(moves, currPos, new ChessPosition(r + 1, c + 1));
+            else
                 moves.add(new ChessMove(currPos, new ChessPosition(r + 1, c + 1)));
-            }
         }
         return moves;
+    }
+
+    /**
+     * Helper method to add all four pawn promotion moves to a set of ChessMove objects.
+     * @param moves set of moves to add to
+     * @param currPos current position of pawn
+     * @param newPos new position of pawn
+     */
+    private void addPromotionMoves(HashSet<ChessMove> moves, ChessPosition currPos, ChessPosition newPos) {
+        moves.add(new ChessMove(currPos, newPos, ChessPiece.PieceType.ROOK));
+        moves.add(new ChessMove(currPos, newPos, ChessPiece.PieceType.KNIGHT));
+        moves.add(new ChessMove(currPos, newPos, ChessPiece.PieceType.BISHOP));
+        moves.add(new ChessMove(currPos, newPos, ChessPiece.PieceType.QUEEN));
     }
 }
