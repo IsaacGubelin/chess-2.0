@@ -33,7 +33,7 @@ public class MovesCalc {
     /**
      * Check if a piece can move from the start to the end position and add the move if valid.
      * @param moves collection of moves to add to
-     * @param board current arrangment of chess pieces
+     * @param board current arrangement of chess pieces
      * @param start old position
      * @param end potential new position
      */
