@@ -7,7 +7,7 @@ import chess.ChessPosition;
 
 import java.util.HashSet;
 
-public class RookMovesCalc implements MovesCalc {
+public class RookMovesCalc extends MovesCalc {
 
 
 

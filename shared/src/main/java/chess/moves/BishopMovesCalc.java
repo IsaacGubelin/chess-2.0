@@ -6,7 +6,7 @@ import chess.ChessPosition;
 
 import java.util.HashSet;
 
-public class BishopMovesCalc implements MovesCalc {
+public class BishopMovesCalc extends MovesCalc {
 
 
     /**

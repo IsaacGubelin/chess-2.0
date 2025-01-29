@@ -10,7 +10,7 @@ import java.util.HashSet;
 /**
  * TODO: add a description
  */
-public interface MovesCalc {
+public class MovesCalc {
 
     int UP = 1;
     int LEFT = -1;
@@ -24,7 +24,7 @@ public interface MovesCalc {
      * @param move the move to be made
      * @return true if the end position is either empty or contains a rival piece and is in bounds.
      */
-    default boolean isClaimablePos(ChessBoard board, ChessMove move) {
+    private boolean isClaimablePos(ChessBoard board, ChessMove move) {
         ChessGame.TeamColor team = board.getPiece(move.getStartPosition()).getTeamColor();
         ChessPosition endPos = move.getEndPosition();
         return endPos.isInBounds() && (!board.hasPieceAtPos(endPos) || board.hasRivalAtPos(endPos, team));
@@ -37,7 +37,7 @@ public interface MovesCalc {
      * @param start old position
      * @param end potential new position
      */
-    default void checkMoveAndAdd(HashSet<ChessMove> moves, ChessBoard board, ChessPosition start, ChessPosition end) {
+    protected void checkMoveAndAdd(HashSet<ChessMove> moves, ChessBoard board, ChessPosition start, ChessPosition end) {
         if (isClaimablePos(board, new ChessMove(start, end))) {
             moves.add(new ChessMove(start, end.clone()));
         }

@@ -5,7 +5,7 @@ import chess.ChessPosition;
 
 import java.util.HashSet;
 
-public class KnightMovesCalc implements MovesCalc {
+public class KnightMovesCalc extends MovesCalc {
 
     /**
      * Take a position for a knight and evaluate all possible spaces it can move to

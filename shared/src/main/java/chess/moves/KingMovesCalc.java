@@ -6,7 +6,7 @@ import chess.ChessPosition;
 
 import java.util.HashSet;
 
-public class KingMovesCalc implements MovesCalc {
+public class KingMovesCalc extends MovesCalc {
 
     /**
      * Check available moves for a king. Does not evaluate stalemate or check.
