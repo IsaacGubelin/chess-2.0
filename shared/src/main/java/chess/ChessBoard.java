@@ -52,9 +52,20 @@ public class ChessBoard {
      * Check if piece exists at given position
      *
      * @param position square to check
+     * @return true if a chess piece lies on the given position
      */
     public boolean hasPieceAtPos(ChessPosition position) {
         return (this.grid[position.getRow() - 1][position.getColumn() - 1] != null);
+    }
+
+    /**
+     * Check if piece exists at given position. Overload for row/column integer parameters
+     * @param row row to check
+     * @param column column to check
+     * @return true if a chess piece lies on the given coordinates
+     */
+    public boolean hasPieceAtPos(int row, int column) {
+        return hasPieceAtPos(new ChessPosition(row, column));
     }
 
     /**
