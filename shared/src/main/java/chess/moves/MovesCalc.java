@@ -8,15 +8,15 @@ import chess.ChessPosition;
 import java.util.HashSet;
 
 /**
- * TODO: add a description
+ * Moves Calculator. Houses available functions for child classes to use.
  */
 public class MovesCalc {
 
-    int UP = 1;
-    int LEFT = -1;
-    int DOWN = -1;
-    int RIGHT = 1;
-    int SAME_LINE = 0;
+    static final int UP = 1;
+    static final int LEFT = -1;
+    static final int DOWN = -1;
+    static final int RIGHT = 1;
+    static final int SAME_LINE = 0;
 
     /**
      *  Given a move, this function checks if a chess piece of interest may claim the given new position.

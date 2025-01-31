@@ -10,7 +10,7 @@ import java.util.Objects;
  */
 public class ChessPosition {
 
-    private final int GRID_SIZE = 8;
+    private static final int GRID_SIZE = 8;
 
     public ChessPosition(int row, int col) {
         this.row = row;
