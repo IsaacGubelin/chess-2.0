@@ -10,7 +10,7 @@ import java.util.Arrays;
  */
 public class ChessBoard {
 
-    public static final int GRID_SIZE = 8;
+    public final int GRID_SIZE = 8;
 
     public ChessBoard() {
         grid = new ChessPiece[GRID_SIZE][GRID_SIZE];
@@ -152,6 +152,6 @@ public class ChessBoard {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(grid);
+        return Arrays.deepHashCode(grid);
     }
 }

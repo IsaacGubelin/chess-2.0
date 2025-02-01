@@ -33,7 +33,7 @@ public class ChessPiece {
     /**
      * Private data
      */
-    private ChessGame.TeamColor color;
+    final private ChessGame.TeamColor color;
     private PieceType type;
 
 

@@ -1,6 +1,9 @@
 package chess;
 
+import chess.checkendgame.CheckCalculator;
+
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -11,14 +14,26 @@ import java.util.Collection;
 public class ChessGame {
 
     public ChessGame() {
-
+        board = new ChessBoard();
+        board.resetBoard();
+        teamTurn = TeamColor.WHITE;
+        whiteKingLocation = new ChessPosition(1, 5);
+        blackKingLocation = new ChessPosition(8, 5);
     }
+
+    /**
+     * Private data
+     */
+    private ChessBoard board;
+    private ChessGame.TeamColor teamTurn;
+    private ChessPosition whiteKingLocation; // Check these positions each turn for check/stalemate
+    private ChessPosition blackKingLocation;
 
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return teamTurn;
     }
 
     /**
@@ -27,7 +42,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        this.teamTurn = team;
     }
 
     /**
@@ -66,7 +81,12 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+
+        ChessPosition posToCheck = (teamColor == TeamColor.WHITE) ? whiteKingLocation : blackKingLocation;
+
+        CheckCalculator checkCalc = new CheckCalculator();
+
+        return checkCalc.positionInDanger(this.board, posToCheck);
     }
 
     /**
@@ -91,12 +111,30 @@ public class ChessGame {
     }
 
     /**
+     * Locates king with given team color and returns its coordinates.
+     * @return ChessPosition object of king's location
+     */
+    private ChessPosition findKing(ChessGame.TeamColor team) {
+        ChessPiece kingToFind = new ChessPiece(team, ChessPiece.PieceType.KING);
+        for (int r = 1; r <= board.GRID_SIZE; r++) {
+            for (int c = 1; c <= board.GRID_SIZE; c++) {
+                ChessPosition searchPos = new ChessPosition(r, c);
+                if (board.hasPieceAtPos(searchPos) && board.getPiece(searchPos).equals(kingToFind))
+                    return searchPos;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Sets this game's chessboard with a given board
      *
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+        this.board = board;
+        whiteKingLocation = findKing(TeamColor.WHITE);
+        blackKingLocation = findKing(TeamColor.BLACK);
     }
 
     /**
@@ -105,6 +143,23 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        return board;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessGame game = (ChessGame) o;
+        return board.equals(game.board) && teamTurn == game.teamTurn;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(board, teamTurn);
     }
 }
