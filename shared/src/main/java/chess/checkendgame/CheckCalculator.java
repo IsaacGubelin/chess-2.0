@@ -20,7 +20,8 @@ public class CheckCalculator {
                 (team == ChessGame.TeamColor.WHITE) ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
 
         return (inCheckDiagonally(board, position, opponent) ||
-                inCheckOrthogonally(board, position, opponent));
+                inCheckOrthogonally(board, position, opponent)) ||
+                inCheckByPawn(board, position, opponent);
         // Retrieve valid knight moves for a pretend knight of opponent color
         // Check each end position for an opponent knight
         // Return true if one is found!
@@ -82,5 +83,22 @@ public class CheckCalculator {
             }
         }
         return false;
+    }
+
+    /**
+     * Evaluate danger to king from a pawn.
+     * @param board current arrangement of pieces
+     * @param position position of king
+     * @param opponent team color of opponent
+     * @return true if a pawn is in a position to capture the king
+     */
+    private boolean inCheckByPawn(ChessBoard board, ChessPosition position, ChessGame.TeamColor opponent) {
+        ChessPiece enemyPawn = new ChessPiece(opponent, ChessPiece.PieceType.PAWN);
+
+        int checkRow = (opponent == ChessGame.TeamColor.WHITE) ? position.getRow() - 1 : position.getRow() + 1;
+        ChessPosition checkPawnLeft = new ChessPosition(checkRow, position.getColumn() - 1);
+        ChessPosition checkPawnRight = new ChessPosition(checkRow, position.getColumn() + 1);
+        return (board.hasPieceAtPos(checkPawnLeft) && board.getPiece(checkPawnLeft).equals(enemyPawn) ||
+                board.hasPieceAtPos(checkPawnRight) && board.getPiece(checkPawnRight).equals(enemyPawn));
     }
 }

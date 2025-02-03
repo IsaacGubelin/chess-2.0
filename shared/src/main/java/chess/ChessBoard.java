@@ -55,7 +55,7 @@ public class ChessBoard {
      * @return true if a chess piece lies on the given position
      */
     public boolean hasPieceAtPos(ChessPosition position) {
-        return (this.grid[position.getRow() - 1][position.getColumn() - 1] != null);
+        return (position.isInBounds() && this.grid[position.getRow() - 1][position.getColumn() - 1] != null);
     }
 
     /**
