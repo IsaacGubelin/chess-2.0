@@ -2,6 +2,8 @@ package chess.checkendgame;
 
 import chess.*;
 import chess.moves.BishopMovesCalc;
+import chess.moves.KingMovesCalc;
+import chess.moves.KnightMovesCalc;
 import chess.moves.RookMovesCalc;
 
 import java.util.HashSet;
@@ -11,6 +13,12 @@ public class CheckCalculator {
 
     //TODO: consolidate duplicate code
 
+    /**
+     * Check a given position's safety by evaluating if it is under attack by an opponent piece.
+     * @param board current arrangement of chess pieces
+     * @param position position to check safety for
+     * @return true if position is under threat of capture by opponent
+     */
     public boolean positionInDanger(ChessBoard board, ChessPosition position) {
         if (!board.hasPieceAtPos(position)) { // Edge case if position is empty
             return false;
@@ -19,16 +27,9 @@ public class CheckCalculator {
         ChessGame.TeamColor opponent =
                 (team == ChessGame.TeamColor.WHITE) ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
 
-        return (inCheckDiagonally(board, position, opponent) ||
-                inCheckOrthogonally(board, position, opponent)) ||
-                inCheckByPawn(board, position, opponent);
-        // Retrieve valid knight moves for a pretend knight of opponent color
-        // Check each end position for an opponent knight
-        // Return true if one is found!
-
-        // Rinse and repeat for other pieces EXCEPT
-
-        // the pawn. Just check diagonal spaces manually.
+        return (inCheckDiagonally(board, position, opponent) || inCheckOrthogonally(board, position, opponent)) ||
+                inCheckByPawn(board, position, opponent) || inCheckByKnight(board, position, opponent) ||
+                inCheckByKing(board, position, opponent);
     }
 
     /**
@@ -37,7 +38,7 @@ public class CheckCalculator {
      *     Uses the bishop moves calculator to treat the king's position as a possible move for a diagonally-moving
      *     enemy. Calculates the moves possible for an enemy bishop, treating the king's location as a destination.
      *     Checks all end positions returned from the calculator for potential danger from an enemy bishop or queen.
-     * @param board current arrangement of chess pieces.
+     * @param board current arrangement of chess pieces
      * @param position position to check safety for
      * @param opponent team color of opponent
      * @return true if an enemy bishop or queen is found in a diagonal position from the king.
@@ -47,13 +48,10 @@ public class CheckCalculator {
         ChessPiece enemyBishop = new ChessPiece(opponent, ChessPiece.PieceType.BISHOP);
         ChessPiece enemyQueen = new ChessPiece(opponent, ChessPiece.PieceType.QUEEN);
 
-        HashSet<ChessMove> diagonalMoves = bishopCalc.getBishopMoves(board, position);
-        for (ChessMove move : diagonalMoves) {
-            ChessPosition pos = move.getEndPosition();
-            ChessPiece possibleEnemy = board.getPiece(pos);
-            if (possibleEnemy != null && (possibleEnemy.equals(enemyBishop) || possibleEnemy.equals(enemyQueen))) {
+        for (ChessMove move : bishopCalc.getBishopMoves(board, position)) {
+            ChessPiece possibleEnemy = board.getPiece(move.getEndPosition());
+            if (possibleEnemy != null && (possibleEnemy.equals(enemyBishop) || possibleEnemy.equals(enemyQueen)))
                 return true;
-            }
         }
         return false;
     }
@@ -74,13 +72,10 @@ public class CheckCalculator {
         ChessPiece enemyRook = new ChessPiece(opponent, ChessPiece.PieceType.ROOK);
         ChessPiece enemyQueen = new ChessPiece(opponent, ChessPiece.PieceType.QUEEN);
 
-        HashSet<ChessMove> orthogonalMoves = rookCalc.getRookMoves(board, position);
-        for (ChessMove move : orthogonalMoves) {
-            ChessPosition pos = move.getEndPosition();
-            ChessPiece possibleEnemy = board.getPiece(pos);
-            if (possibleEnemy != null && (possibleEnemy.equals(enemyRook) || possibleEnemy.equals(enemyQueen))) {
+        for (ChessMove move : rookCalc.getRookMoves(board, position)) {
+            ChessPiece possibleEnemy = board.getPiece(move.getEndPosition());
+            if (possibleEnemy != null && (possibleEnemy.equals(enemyRook) || possibleEnemy.equals(enemyQueen)))
                 return true;
-            }
         }
         return false;
     }
@@ -100,5 +95,36 @@ public class CheckCalculator {
         ChessPosition checkPawnRight = new ChessPosition(checkRow, position.getColumn() + 1);
         return (board.hasPieceAtPos(checkPawnLeft) && board.getPiece(checkPawnLeft).equals(enemyPawn) ||
                 board.hasPieceAtPos(checkPawnRight) && board.getPiece(checkPawnRight).equals(enemyPawn));
+    }
+
+    /**
+     * Check if an enemy knight can move and land on the given position.
+     * @param board current arrangement of pieces
+     * @param position position to check safety for
+     * @param opponent team color of opponent
+     * @return true if an opponent knight can move into the position
+     */
+    private boolean inCheckByKnight(ChessBoard board, ChessPosition position, ChessGame.TeamColor opponent) {
+        ChessPiece enemyKnight = new ChessPiece(opponent, ChessPiece.PieceType.KNIGHT);
+        KnightMovesCalc knightCalc = new KnightMovesCalc();
+
+        for (ChessMove move : knightCalc.getKnightMoves(board, position)) {
+            ChessPiece possibleEnemy = board.getPiece(move.getEndPosition());
+            if (possibleEnemy != null && possibleEnemy.equals(enemyKnight))
+                return true;
+        }
+        return false;
+    }
+
+    private boolean inCheckByKing(ChessBoard board, ChessPosition position, ChessGame.TeamColor opponent) {
+        ChessPiece enemyKing = new ChessPiece(opponent, ChessPiece.PieceType.KING);
+        KingMovesCalc kingCalc = new KingMovesCalc();
+
+        for (ChessMove move : kingCalc.getKingMoves(board, position)) {
+            ChessPiece possibleEnemy = board.getPiece(move.getEndPosition());
+            if (possibleEnemy != null && possibleEnemy.equals(enemyKing))
+                return true;
+        }
+        return false;
     }
 }

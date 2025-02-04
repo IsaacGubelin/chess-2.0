@@ -83,9 +83,7 @@ public class ChessGame {
     public boolean isInCheck(TeamColor teamColor) {
 
         ChessPosition posToCheck = (teamColor == TeamColor.WHITE) ? whiteKingLocation : blackKingLocation;
-
         CheckCalculator checkCalc = new CheckCalculator();
-
         return checkCalc.positionInDanger(this.board, posToCheck);
     }
 
@@ -96,6 +94,8 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
+        if (!isInCheck(teamColor)) // Edge case: team must be in check
+            return false;
         throw new RuntimeException("Not implemented");
     }
 
@@ -107,6 +107,8 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
+        if (isInCheck(teamColor)) // Edge case: no current attack is present during stalemate
+            return false;
         throw new RuntimeException("Not implemented");
     }
 
