@@ -3,6 +3,7 @@ package chess;
 import chess.checkendgame.CheckCalculator;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 /**
@@ -61,17 +62,95 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = board.getPiece(startPosition);
+        ChessBoard boardCopy = board.copy();
+        Collection<ChessMove> validMoves = new HashSet<>();
+
+        if (!board.hasPieceAtPos(startPosition))
+            return validMoves; // If space has no piece, return empty set
+        for (ChessMove move : piece.pieceMoves(board, startPosition)) {
+            board.removePiece(move.getStartPosition());
+            board.addPiece(move.getEndPosition(), piece);
+            updateKingLoc(move, piece);
+            if (!isInCheck(piece.getTeamColor())) {
+                validMoves.add(move);
+            }
+            setBoard(boardCopy); // Reset board to original state, update the king locations if applicable
+        }
+        return validMoves;
     }
+
+    /**
+     * Check if a given team has no valid moves left for any of their pieces.
+     * @param team team color to check valid moves for
+     * @return true if team has no valid moves
+     */
+    private boolean noValidMovesLeft(ChessGame.TeamColor team) {
+        Collection<ChessMove> moves = new HashSet<>();
+        for (int r = 1; r <= board.GRID_SIZE; r++) {
+            for (int c = 1; c <= board.GRID_SIZE; c++) {
+                ChessPosition posToCheck = new ChessPosition(r, c);
+                if (board.hasPieceAtPos(posToCheck) && board.getPiece(posToCheck).getTeamColor() == team &&
+                        !validMoves(posToCheck).isEmpty()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
     /**
      * Makes a move in a chess game
      *
-     * @param move chess move to preform
+     * @param move chess move to perform
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        if (isInvalidMove(move))
+            throw new InvalidMoveException("Illegal move.");
+        ChessPiece movePiece = board.getPiece(move.getStartPosition());
+        board.removePiece(move.getStartPosition());
+        board.addPiece(move.getEndPosition(), movePiece);
+        updateKingLoc(move, movePiece); // Check if piece was a king and update its location
+        validatePromotion(move); // Assert promotion if pawn reaches end of board
+
+        flipTeamTurn();
+    }
+
+    /**
+     * Use after making a move to check if a king was moved, and update its location
+     *
+     * @param move chess move that was previously performed
+     * @param piece piece that was moved
+     */
+    private void updateKingLoc(ChessMove move, ChessPiece piece) {
+        if (piece.getPieceType() == ChessPiece.PieceType.KING) {
+            if (piece.getTeamColor() == TeamColor.WHITE)
+                whiteKingLocation = move.getEndPosition();
+            else
+                blackKingLocation = move.getEndPosition();
+        }
+    }
+
+    /**
+     * Assert promotion for pawn. Used right after a move is made.
+     * @param move
+     */
+    private void validatePromotion(ChessMove move) {
+        int row = move.getEndPosition().getRow(); // Evaluate row piece ended on
+        if (board.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.PAWN &&
+                (row == 1 || row == 8)) {
+            board.removePiece(move.getEndPosition());
+            board.addPiece(move.getEndPosition(), new ChessPiece(teamTurn, move.getPromotionPiece()));
+        }
+    }
+
+    /**
+     * Flips the team turn
+     */
+    private void flipTeamTurn() {
+        teamTurn = (teamTurn == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
     }
 
     /**
@@ -94,9 +173,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        if (!isInCheck(teamColor)) // Edge case: team must be in check
-            return false;
-        throw new RuntimeException("Not implemented");
+        return  (isInCheck(teamColor) && noValidMovesLeft(teamColor));
     }
 
     /**
@@ -107,10 +184,22 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        if (isInCheck(teamColor)) // Edge case: no current attack is present during stalemate
-            return false;
-        throw new RuntimeException("Not implemented");
+        return (!isInCheck(teamColor) && noValidMovesLeft(teamColor));
     }
+
+    /**
+     * Test the validity of a move.
+     * @param move the ChessMove object to evaluate
+     * @return true if the move is invalid, incomplete, doesn't move a piece, is out of bounds, or moves out of turn.
+     */
+    private boolean isInvalidMove(ChessMove move) {
+        Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
+        if (!validMoves.contains(move) || move.getStartPosition() == null || move.getEndPosition() == null ||
+                !move.getEndPosition().isInBounds())
+            return true;
+        return (board.getPiece(move.getStartPosition()).getTeamColor() != teamTurn); // Check whose turn it is
+    }
+
 
     /**
      * Locates king with given team color and returns its coordinates.
@@ -134,7 +223,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        this.board = board;
+        this.board = board.copy();
         whiteKingLocation = findKing(TeamColor.WHITE);
         blackKingLocation = findKing(TeamColor.BLACK);
     }
