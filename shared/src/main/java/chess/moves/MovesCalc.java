@@ -39,7 +39,7 @@ public class MovesCalc {
      */
     protected void checkMoveAndAdd(HashSet<ChessMove> moves, ChessBoard board, ChessPosition start, ChessPosition end) {
         if (isClaimablePos(board, new ChessMove(start, end))) {
-            moves.add(new ChessMove(start, end.clone()));
+            moves.add(new ChessMove(start, end.copy()));
         }
     }
 

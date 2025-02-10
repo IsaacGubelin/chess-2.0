@@ -50,13 +50,13 @@ public class RookMovesCalc extends MovesCalc {
             if (board.hasPieceAtPos(endPos)) {
                 // If the encountered piece in this direction is a rival, add possible capture move
                 if (board.hasRivalAtPos(endPos, team)) {
-                    possibleMoves.add(new ChessMove(currPos, endPos.clone()));
+                    possibleMoves.add(new ChessMove(currPos, endPos.copy()));
                 }
                 // Cannot move over a piece, break and check moves in other directions
                 break;
             }
             // Space must be empty. Add to collection and keep checking for more available moves.
-            possibleMoves.add(new ChessMove(currPos, endPos.clone()));
+            possibleMoves.add(new ChessMove(currPos, endPos.copy()));
             moveToNextPosition(endPos, rowOffset, colOffset);
         }
         return possibleMoves;

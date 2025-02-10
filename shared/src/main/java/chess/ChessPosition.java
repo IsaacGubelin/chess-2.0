@@ -76,10 +76,9 @@ public class ChessPosition {
 
     /**
      * Get a copy of this chess position object
-     * @return clone of chess position
+     * @return duplicate of chess position
      */
-    @Override
-    public ChessPosition clone() {
+    public ChessPosition copy() {
         return new ChessPosition(row, col);
     }
 

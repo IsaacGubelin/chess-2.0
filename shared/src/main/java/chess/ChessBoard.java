@@ -128,6 +128,23 @@ public class ChessBoard {
     }
 
     /**
+     * Returns a ChessBoard copy.
+     * @return clone of this chess board object
+     */
+    public ChessBoard copy() {
+        ChessBoard cloneBoard = new ChessBoard();
+
+        for (int r = 0; r < GRID_SIZE; r++) {
+            for (int c = 0; c < GRID_SIZE; c++) {
+                if (this.grid[r][c] != null) {
+                    cloneBoard.grid[r][c] = this.grid[r][c].copy(); // Clone each ChessPiece
+                }
+            }
+        }
+        return cloneBoard;
+    }
+
+    /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */

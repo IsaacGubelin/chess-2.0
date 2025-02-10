@@ -52,9 +52,9 @@ public class ChessPiece {
     }
 
     /**
-     * Calculates all the positions a chess piece can move to
+     * Calculates all the positions a chess piece can move to.
      * Does not take into account moves that are illegal due to leaving the king in
-     * danger
+     * danger.
      *
      * @return Collection of valid moves
      */
@@ -87,8 +87,11 @@ public class ChessPiece {
                 moves.addAll(pawnCalc.getPawnMoves(board, myPosition));
             }
         }
-
         return moves;
+    }
+
+    public ChessPiece copy() {
+        return new ChessPiece(color, type);
     }
 
     @Override
