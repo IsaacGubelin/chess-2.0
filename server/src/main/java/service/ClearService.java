@@ -18,7 +18,7 @@ public class ClearService {
         userDao.clearUserTable();
         authDao.clearAuthTable();
         if (!gameDao.isEmpty() || !userDao.isEmpty() || !authDao.isEmpty()) {
-            throw new ResponseException("Error: Could not clear database");
+            throw new ResponseException(500, "Error: Could not clear database");
         }
     }
 }

@@ -22,7 +22,7 @@ public class ClearHandler {
      * @param res HTTP response
      * @return JSON response and status code
      */
-    public Object handleClearDatabase(Request req, Response res) {
+    public Object handleClearDatabase(Response res) {
 
         try {
             clearService.clearDatabase();

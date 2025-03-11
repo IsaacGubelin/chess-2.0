@@ -24,5 +24,5 @@ public interface GameDAO {
 
     boolean hasAvailableTeam(int gameID, String team) throws DataAccessException;
 
-    boolean isEmpty() throws DataAccessException;
+    boolean isEmpty();
 }

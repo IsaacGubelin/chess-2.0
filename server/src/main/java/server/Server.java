@@ -26,12 +26,13 @@ public class Server {
 
 
         // CLEAR APPLICATION
-        Spark.delete("/db", (req, res) ->new ClearHandler(gameDAO, userDAO, authDAO).handleClearDatabase(req, res));
+        Spark.delete("/db", (req, res) ->new ClearHandler(gameDAO, userDAO, authDAO).handleClearDatabase(res));
 
         // REGISTER USER
         Spark.post("/user", (req, res) -> new RegisterHandler(userDAO, authDAO).registerHandle(req, res));
 
         // LOGIN USER
+
 
 
 
