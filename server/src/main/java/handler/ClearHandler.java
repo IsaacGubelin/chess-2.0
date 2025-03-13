@@ -5,21 +5,19 @@ import dataaccess.*;
 import model.MessageData;
 import exception.ResponseException;
 import service.ClearService;
-import spark.Request;
 import spark.Response;
 
 public class ClearHandler {
 
-    private ClearService clearService;
+    private final ClearService clearService;
 
     public ClearHandler(GameDAO gDao, UserDAO uDao, AuthDAO aDao) {
         this.clearService = new ClearService(gDao, uDao, aDao);
     }
 
     /**
-     * Clear all tables in the chess database
-     * @param req HTTP request
-     * @param res HTTP response
+     * Clear all tables in the chess database. Does not use data from HTTP request body.
+     * @param res HTTP response to report success or failure
      * @return JSON response and status code
      */
     public Object handleClearDatabase(Response res) {

@@ -1,22 +1,39 @@
 package service;
 
 
-import dataaccess.*;
-import exception.AlreadyTakenException;
+import dataaccess.AuthDAO;
+import dataaccess.UserDAO;
 import exception.ResponseException;
-import exception.DataAccessException;
-
+import model.UserData;
 import java.sql.SQLException;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class RegisterService {
 
-    private UserDAO userDao;
-    private AuthDAO authDao;
+    private final UserDAO userDao;
+    private final AuthDAO authDao;
 
     public RegisterService(UserDAO uDao, AuthDAO aDao) {
         this.userDao = uDao;
         this.authDao = aDao;
     }
+
+    /**
+     * Hash the user's password and return the user data with the hashed password.
+     * @param user user data to hash
+     * @return user data with hashed password
+     */
+    private UserData hashUserPassword(UserData user) {
+        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+        return new UserData(user.username(), hashedPassword, user.email());
+    }
+
+    /**
+     * Register a new user in the database.
+     * @param user user data to register
+     * @return authToken for the new user
+     * @throws ResponseException if the user data is invalid or the user already exists
+     */
     public String register(model.UserData user)
             throws ResponseException {
 
@@ -32,7 +49,8 @@ public class RegisterService {
         }
         // Create and add user to database
         try {
-            userDao.createUser(user);
+            UserData hashedUser = hashUserPassword(user);
+            userDao.createUser(hashedUser);
             // Add new auth to auth database and get a new authToken
             String authToken = authDao.createAuth(user.username());
             return authToken;
