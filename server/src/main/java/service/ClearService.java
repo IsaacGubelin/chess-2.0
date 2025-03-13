@@ -3,9 +3,9 @@ import dataaccess.*;
 import exception.ResponseException;
 
 public class ClearService {
-    private GameDAO gameDao;
-    private UserDAO userDao;
-    private AuthDAO authDao;
+    private final GameDAO gameDao;
+    private final UserDAO userDao;
+    private final AuthDAO authDao;
 
     public ClearService(GameDAO gDao, UserDAO uDao, AuthDAO aDao) {
         this.gameDao = gDao;
