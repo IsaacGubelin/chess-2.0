@@ -25,7 +25,7 @@ public class RegisterHandler {
      * @param res Has response body and status code
      * @return Response body in JSON format
      */
-    public Object registerHandle(Request req, Response res) {
+    public Object handleRegister(Request req, Response res) {
 
         UserData user = new Gson().fromJson(req.body(), UserData.class); // Convert Json to user data
 

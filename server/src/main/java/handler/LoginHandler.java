@@ -26,7 +26,7 @@ public class LoginHandler {
      * @param res HTTP response to report success or failure
      * @return JSON response and status code
      */
-    public Object loginHandle(Request req, Response res) {
+    public Object handleLogin(Request req, Response res) {
         UserData user = new Gson().fromJson(req.body(), UserData.class);    // Convert Json to user data
 
         try {

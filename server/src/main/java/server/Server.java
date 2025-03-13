@@ -3,15 +3,20 @@ package server;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
-import handler.ClearHandler;
-import handler.RegisterHandler;
+import handler.*;
 import spark.*;
 
 public class Server {
 
-    public MemoryUserDAO userDAO = new MemoryUserDAO();
-    public MemoryGameDAO gameDAO = new MemoryGameDAO();
-    public MemoryAuthDAO authDAO = new MemoryAuthDAO();
+    public MemoryUserDAO userDAO;
+    public MemoryGameDAO gameDAO;
+    public MemoryAuthDAO authDAO;
+
+    public Server() {
+        userDAO = new MemoryUserDAO();
+        gameDAO = new MemoryGameDAO();
+        authDAO = new MemoryAuthDAO();
+    }
 
     /**
      * Contains all endpoints for the server
@@ -29,10 +34,13 @@ public class Server {
         Spark.delete("/db", (req, res) ->new ClearHandler(gameDAO, userDAO, authDAO).handleClearDatabase(res));
 
         // REGISTER USER
-        Spark.post("/user", (req, res) -> new RegisterHandler(userDAO, authDAO).registerHandle(req, res));
+        Spark.post("/user", (req, res) -> new RegisterHandler(userDAO, authDAO).handleRegister(req, res));
 
         // LOGIN USER
+        Spark.post("session", (req, res) -> new LoginHandler(userDAO, authDAO).handleLogin(req, res));
 
+        // LOGOUT USER
+        Spark.delete("session", (req, res) -> new LogoutHandler(authDAO).handleLogout(req, res));
 
 
 

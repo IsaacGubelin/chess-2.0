@@ -47,6 +47,9 @@ public class MemoryAuthDAO implements AuthDAO {
     // Retrieve auth data from a given authToken
     @Override
     public AuthData getAuth(String authToken) {
+        if (!authDataTable.containsKey(authToken)) {
+            return null;
+        }
         return authDataTable.get(authToken);
     }
 
