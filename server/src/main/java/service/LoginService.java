@@ -22,9 +22,8 @@ public class LoginService {
      * @throws ResponseException if the password is incorrect
      */
     private void checkPassword(UserData user) throws ResponseException {
-        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
-        UserData userData = userDao.getUser(user.username());
-        if (!BCrypt.checkpw(hashedPassword, userData.password())) {
+        String hashedPassword = userDao.getUser(user.username()).password();
+        if (!BCrypt.checkpw(user.password(), hashedPassword)) {
             throw new ResponseException(401, "Error: Incorrect password.");
         }
     }
@@ -38,13 +37,8 @@ public class LoginService {
         }
 
         checkPassword(user);
+        String token = authDao.createAuth(user.username());
 
-
-
-
-        //TODO: Retrieve password from DAO
-        // Complete login service
-
-        return new AuthData("word", "word");
+        return new AuthData(token, user.username());
     }
 }

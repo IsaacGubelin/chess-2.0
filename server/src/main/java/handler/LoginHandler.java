@@ -3,7 +3,6 @@ package handler;
 import com.google.gson.Gson;
 import dataaccess.AuthDAO;
 import dataaccess.UserDAO;
-import exception.DataAccessException;
 import exception.ResponseException;
 import model.AuthData;
 import model.MessageData;

@@ -9,8 +9,6 @@ import service.LogoutService;
 import spark.Request;
 import spark.Response;
 
-import javax.xml.crypto.Data;
-
 public class LogoutHandler {
 
     private final LogoutService logoutService;
