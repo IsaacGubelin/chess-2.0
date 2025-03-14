@@ -42,6 +42,15 @@ public class Server {
         // LOGOUT USER
         Spark.delete("session", (req, res) -> new LogoutHandler(authDAO).handleLogout(req, res));
 
+        // CREATE GAME
+        Spark.post("/game", (req, res) -> new GameHandler(authDAO, gameDAO).handleCreateGame(req, res));
+
+        // LIST GAMES
+        Spark.get("/game", (req, res) -> new GameHandler(authDAO, gameDAO).handleListGames(req, res));
+
+        // JOIN GAME
+        Spark.put("/game", (req, res) -> new GameHandler(authDAO, gameDAO).handleJoinGame(req, res));
+
 
 
 

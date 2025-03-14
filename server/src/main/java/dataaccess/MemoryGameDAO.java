@@ -9,6 +9,8 @@ import java.util.HashMap;
 public class MemoryGameDAO implements GameDAO {
 
     private final int GAME_ID_MIN = 1;
+    private final String BLACK_TEAM = "BLACK";
+    private final String WHITE_TEAM = "WHITE";
 
     private HashMap<Integer, GameData> gamesTable = new HashMap<>();
 
@@ -72,13 +74,12 @@ public class MemoryGameDAO implements GameDAO {
         return gamesTable.isEmpty();
     }
 
-    @Override
-    public boolean hasAvailableTeam(int gameID, String team) {
-//        if (team.equals(ConfigConsts.BLACK_TEAM_COL)) {   // If black is requested, check if black team username is null
-//            return gamesTable.get(gameID).blackUsername() == null;
-//        } else if (team.equals(ConfigConsts.WHITE_TEAM_COL)) {    // Check same condition for white team
-//            return gamesTable.get(gameID).whiteUsername() == null;
-//        }
-        return false;   // Irregular team name input will return false by default
+
+    public boolean hasAvailableWhiteTeam(int gameID) {
+        return gamesTable.get(gameID).whiteUsername() == null;
+    }
+
+    public boolean hasAvailableBlackTeam(int gameID) {
+        return gamesTable.get(gameID).blackUsername() == null;
     }
 }

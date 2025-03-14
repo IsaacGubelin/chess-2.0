@@ -1,13 +1,9 @@
 package dataaccess;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-import exception.AlreadyTakenException;
 import exception.DataAccessException;
 import model.GameData;
-
-import javax.xml.crypto.Data;
 
 public interface GameDAO {
 
@@ -22,7 +18,9 @@ public interface GameDAO {
 
     boolean hasGame(int gameID);
 
-    boolean hasAvailableTeam(int gameID, String team) throws DataAccessException;
+    boolean hasAvailableWhiteTeam(int gameID) throws DataAccessException;
+
+    boolean hasAvailableBlackTeam(int gameID) throws DataAccessException;
 
     boolean isEmpty();
 }
