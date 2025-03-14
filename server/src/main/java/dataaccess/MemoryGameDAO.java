@@ -32,19 +32,17 @@ public class MemoryGameDAO implements GameDAO {
     public int createGame(String gameName) {
         int id = generateID(); // Make new game ID
 
-        GameData game = new GameData(id, null, null, gameName, new ChessGame());
-        gamesTable.put(game.gameID(), game);
+        if (id >= 0) { // Skip game creation if ID rolls over to negative. This means the games are full.
+            GameData game = new GameData(id, null, null, gameName, new ChessGame());
+            gamesTable.put(game.gameID(), game);
+        }
         return id;
     }
 
     // A getter for retrieving the games database
     @Override
     public ArrayList<GameData> getGamesList() {
-        ArrayList<GameData> games = new ArrayList<>();
-        for (int id : gamesTable.keySet()) { // Iterate through each key
-            games.add(gamesTable.get(id)); // Fetch game from current key and add to list
-        }
-        return games;
+        return new ArrayList<>(gamesTable.values());
     }
 
     // Use to update the white team with a new user

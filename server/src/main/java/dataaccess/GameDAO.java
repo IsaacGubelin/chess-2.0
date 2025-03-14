@@ -12,13 +12,13 @@ import javax.xml.crypto.Data;
 public interface GameDAO {
 
     void clearGameTable();
-    int createGame(String gameName) throws SQLException;
+    int createGame(String gameName) throws DataAccessException;
 
     void updateWhiteUsername(int gameID, String whiteUsername) throws DataAccessException;
 
     void updateBlackUsername(int gameID, String whiteUsername) throws DataAccessException;
 
-    public ArrayList<GameData> getGamesList() throws SQLException;
+    public ArrayList<GameData> getGamesList() throws DataAccessException;
 
     boolean hasGame(int gameID);
 
