@@ -5,10 +5,8 @@ import exception.DataAccessException;
 
 public interface AuthDAO {
 
-
-
     void clearAuthTable();
-    String createAuth(String username);
+    String createAuth(String username) throws DataAccessException;
 
     AuthData getAuth(String authToken) throws DataAccessException;
 
@@ -16,5 +14,5 @@ public interface AuthDAO {
 
     void deleteAuth(String authToken) throws DataAccessException;
 
-    boolean isEmpty();
+    boolean isEmpty() throws DataAccessException;
 }

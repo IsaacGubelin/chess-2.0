@@ -2,6 +2,7 @@ package handler;
 
 import com.google.gson.Gson;
 import dataaccess.*;
+import exception.DataAccessException;
 import model.MessageData;
 import exception.ResponseException;
 import service.ClearService;
@@ -24,12 +25,16 @@ public class ClearHandler {
 
         try {
             clearService.clearDatabase();
+            res.status(200); // Success
+            return "{}";
         } catch (ResponseException e) {
             res.status(e.getStatusCode());
             return new Gson().toJson(new MessageData(e.getMessage()));
+        } catch (DataAccessException e) {
+            res.status(500);
+            return new Gson().toJson(new MessageData(e.getMessage()));
         }
-        res.status(200); // Success
-        return "{}";
+
     }
 
 }

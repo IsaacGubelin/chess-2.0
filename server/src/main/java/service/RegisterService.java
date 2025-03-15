@@ -3,10 +3,13 @@ package service;
 
 import dataaccess.AuthDAO;
 import dataaccess.UserDAO;
+import exception.DataAccessException;
 import exception.ResponseException;
 import model.UserData;
 import java.sql.SQLException;
 import org.mindrot.jbcrypt.BCrypt;
+
+import javax.xml.crypto.Data;
 
 public class RegisterService {
 
@@ -52,10 +55,9 @@ public class RegisterService {
             UserData hashedUser = hashUserPassword(user);
             userDao.createUser(hashedUser);
             // Add new auth to auth database and get a new authToken
-            String authToken = authDao.createAuth(user.username());
-            return authToken;
+            return authDao.createAuth(user.username());
 
-        } catch (SQLException ex) {
+        } catch (DataAccessException ex) {
             throw new ResponseException(500, "Error: Could not create user in SQL.");
         }
 

@@ -3,6 +3,7 @@ package handler;
 import com.google.gson.Gson;
 import dataaccess.AuthDAO;
 import dataaccess.UserDAO;
+import exception.DataAccessException;
 import exception.ResponseException;
 import model.AuthData;
 import model.MessageData;
@@ -35,6 +36,9 @@ public class LoginHandler {
         } catch (ResponseException e) {
             res.status(e.getStatusCode());
             return new Gson().toJson(new MessageData(e.getMessage()));
+        } catch (DataAccessException e) {
+            res.status(500);
+            return new Gson().toJson(new MessageData("Error: SQL Database issue"));
         }
     }
 

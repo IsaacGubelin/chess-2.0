@@ -1,6 +1,7 @@
 package service;
 import dataaccess.AuthDAO;
 import dataaccess.UserDAO;
+import exception.DataAccessException;
 import exception.ResponseException;
 import model.AuthData;
 import model.UserData;
@@ -28,7 +29,7 @@ public class LoginService {
         }
     }
 
-    public AuthData login(UserData user) throws ResponseException {
+    public AuthData login(UserData user) throws ResponseException, DataAccessException {
 
         if (user.username() == null || user.password() == null) { // Check for bad request
             throw new ResponseException(400, "Error: Missing data field(s) in login.");
