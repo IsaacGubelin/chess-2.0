@@ -99,7 +99,7 @@ public class SQLAuthDAO implements AuthDAO {
     public boolean hasAuth(String authToken) throws DataAccessException {
         // Make query statement to count instances of key
         String query = String.format("SELECT COUNT(*) FROM %s WHERE %s = ?", AUTH_TABLE_NAME, AUTH_KEY_COL);
-        try (var ps = conn.prepareStatement(query)) {
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, authToken);    // Replace '?' with key value
 
             ResultSet resultSet = ps.executeQuery();
@@ -117,8 +117,8 @@ public class SQLAuthDAO implements AuthDAO {
     @Override
     public boolean isEmpty() throws DataAccessException {
         // Make query statement to count entries
-        String authQueryStmt = String.format("SELECT COUNT(*) FROM %s", AUTH_TABLE_NAME);
-        try (var ps = conn.prepareStatement(authQueryStmt)) {
+        String query = String.format("SELECT COUNT(*) FROM %s", AUTH_TABLE_NAME);
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
             // Executing the query and retrieving the result set
             ResultSet rSet = ps.executeQuery();
 
