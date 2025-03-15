@@ -1,21 +1,19 @@
 package server;
 
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import handler.*;
 import spark.*;
 
 public class Server {
 
-    public MemoryUserDAO userDAO;
+    public SQLUserDAO userDAO;
     public MemoryGameDAO gameDAO;
-    public MemoryAuthDAO authDAO;
+    public SQLAuthDAO authDAO;
 
     public Server() {
-        userDAO = new MemoryUserDAO();
+        userDAO = new SQLUserDAO();
         gameDAO = new MemoryGameDAO();
-        authDAO = new MemoryAuthDAO();
+        authDAO = new SQLAuthDAO();
     }
 
     /**

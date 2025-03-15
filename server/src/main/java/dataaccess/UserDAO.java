@@ -9,7 +9,7 @@ public interface UserDAO {
 
     void clearUserTable();
 
-    void createUser(UserData userData) throws SQLException;
+    void createUser(UserData userData) throws DataAccessException;
 
     UserData getUser(String username);
 
@@ -17,5 +17,5 @@ public interface UserDAO {
 
     boolean hasThisUsername(String username);
 
-    boolean isEmpty();
+    boolean isEmpty() throws DataAccessException;
 }

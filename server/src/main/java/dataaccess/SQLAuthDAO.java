@@ -1,8 +1,10 @@
 package dataaccess;
 
 import exception.DataAccessException;
+import exception.ResponseException;
 import model.AuthData;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,6 +12,7 @@ import java.util.UUID;
 
 public class SQLAuthDAO implements AuthDAO {
 
+    private Connection conn;
     private final String AUTH_TABLE_NAME = "auths";
     private final String AUTH_KEY_COL = "authToken";
     private final String AUTH_USER_COL = "username";
@@ -27,23 +30,15 @@ public class SQLAuthDAO implements AuthDAO {
 
     // Constructor for AuthDAO
     public SQLAuthDAO() {
-
         try {
             DatabaseManager.createDatabase();
-        } catch (DataAccessException ex) {
-            System.out.println("Couldn't create database");
-        }
-
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createAuthTableStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
+            conn = DatabaseManager.getConnection();
+            for (String statement : createAuthTableStatements) {
+                PreparedStatement ps = conn.prepareStatement(statement);
+                ps.executeUpdate();
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (exception.DataAccessException e) {
-            System.out.println("Error: could not create auths table in database.");
+        } catch (SQLException | DataAccessException ex) {
+            System.out.println("Couldn't create database");
         }
     }
 
@@ -69,24 +64,20 @@ public class SQLAuthDAO implements AuthDAO {
                 "INSERT INTO %s (%s, %s) VALUES (?, ?)", AUTH_TABLE_NAME, AUTH_KEY_COL, AUTH_USER_COL
         );
         ExecuteSQL.executeUpdate(createStmt, token, username); // Function replaces '?' with parameters
-
         return token;
     }
 
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
 
-        try (var conn = DatabaseManager.getConnection()) {
-            String query = String.format(
-                    "SELECT %s, %s FROM %s WHERE %s=?", AUTH_KEY_COL, AUTH_USER_COL, AUTH_TABLE_NAME, AUTH_KEY_COL
-            );
-            try (PreparedStatement ps = conn.prepareStatement(query)) {
-                ps.setString(1, authToken);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {  // If the SQL query returns a result
-                        return readAuth(rs);
-                    }
-                }
+        String query = String.format(
+                "SELECT %s, %s FROM %s WHERE %s=?", AUTH_KEY_COL, AUTH_USER_COL, AUTH_TABLE_NAME, AUTH_KEY_COL
+        );
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, authToken);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {  // If the SQL query returns a result
+                return readAuth(rs);
             }
         } catch (SQLException e) {
             throw new DataAccessException("Error: could not retrieve auth.");
@@ -99,53 +90,45 @@ public class SQLAuthDAO implements AuthDAO {
         String deleteStmt = String.format("DELETE FROM %s WHERE %s=?", AUTH_TABLE_NAME, AUTH_KEY_COL);
         try {
             ExecuteSQL.executeUpdate(deleteStmt, authToken);
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             System.out.println("Error: could not delete authToken.");
         }
     }
 
     @Override
-    public boolean hasAuth(String authToken) {
-        try (var conn = DatabaseManager.getConnection()) {
-            // Make query statement to count instances of key
-            String query = String.format("SELECT COUNT(*) FROM %s WHERE %s = ?", AUTH_TABLE_NAME, AUTH_KEY_COL);
-            try (var ps = conn.prepareStatement(query)) {
-                ps.setString(1, authToken);    // Replace '?' with key value
+    public boolean hasAuth(String authToken) throws DataAccessException {
+        // Make query statement to count instances of key
+        String query = String.format("SELECT COUNT(*) FROM %s WHERE %s = ?", AUTH_TABLE_NAME, AUTH_KEY_COL);
+        try (var ps = conn.prepareStatement(query)) {
+            ps.setString(1, authToken);    // Replace '?' with key value
 
-                // Executing the query and retrieving the result set
-                ResultSet resultSet = ps.executeQuery();
-
-                // Checking if the result set has any rows
-                if (resultSet.next()) {
-                    int count = resultSet.getInt(1);
-                    // If count is greater than 0, key exists; otherwise, it does not exist
-                    return count > 0;
-                }
+            ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+                // If count is greater than 0, key exists; otherwise, it does not exist
+                return count > 0;
             }
-        } catch (DataAccessException | SQLException e) {
-            System.out.println("Could not look for auth key!");
+        } catch (SQLException e) {
+            throw new DataAccessException("Error: could not find auth key!");
         }
         return false;
     }
 
     @Override
     public boolean isEmpty() throws DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
-            // Make query statement to count entries
-            String authQueryStmt = String.format("SELECT COUNT(*) FROM %s", AUTH_TABLE_NAME);
-            try (var ps = conn.prepareStatement(authQueryStmt)) {
+        // Make query statement to count entries
+        String authQueryStmt = String.format("SELECT COUNT(*) FROM %s", AUTH_TABLE_NAME);
+        try (var ps = conn.prepareStatement(authQueryStmt)) {
+            // Executing the query and retrieving the result set
+            ResultSet rSet = ps.executeQuery();
 
-                // Executing the query and retrieving the result set
-                ResultSet rSet = ps.executeQuery();
-
-                // Checking if the result set has any rows
-                if (rSet.next()) {
-                    int cnt = rSet.getInt(1);
-                    return (cnt == 0);
-                }
+            // Checking if the result set has any rows
+            if (rSet.next()) {
+                int cnt = rSet.getInt(1);
+                return (cnt == 0);
             }
-        } catch (DataAccessException | SQLException e) {
-            throw new DataAccessException("Could not look for auth key!");
+        } catch (SQLException e) {
+            throw new DataAccessException("Error: Could not look for auth key!");
         }
         return false;
     }

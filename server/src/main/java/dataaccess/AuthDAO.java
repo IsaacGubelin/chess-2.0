@@ -10,7 +10,7 @@ public interface AuthDAO {
 
     AuthData getAuth(String authToken) throws DataAccessException;
 
-    boolean hasAuth(String authToken);
+    boolean hasAuth(String authToken) throws DataAccessException;
 
     void deleteAuth(String authToken) throws DataAccessException;
 

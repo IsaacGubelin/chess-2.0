@@ -38,7 +38,7 @@ public class ExecuteSQL {
                 return 0;
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Could not execute update!");
+            throw new DataAccessException("Error: Could not execute update!");
         }
     }
 

@@ -14,13 +14,13 @@ public interface GameDAO {
 
     void updateBlackUsername(int gameID, String whiteUsername) throws DataAccessException;
 
-    public ArrayList<GameData> getGamesList() throws DataAccessException;
+    ArrayList<GameData> getGamesList() throws DataAccessException;
 
-    boolean hasGame(int gameID);
+    boolean hasGame(int gameID) throws DataAccessException;
 
     boolean hasAvailableWhiteTeam(int gameID) throws DataAccessException;
 
     boolean hasAvailableBlackTeam(int gameID) throws DataAccessException;
 
-    boolean isEmpty();
+    boolean isEmpty() throws DataAccessException;
 }
