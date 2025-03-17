@@ -7,12 +7,12 @@ import spark.*;
 public class Server {
 
     public SQLUserDAO userDAO;
-    public MemoryGameDAO gameDAO;
+    public SQLGameDAO gameDAO;
     public SQLAuthDAO authDAO;
 
     public Server() {
         userDAO = new SQLUserDAO();
-        gameDAO = new MemoryGameDAO();
+        gameDAO = new SQLGameDAO();
         authDAO = new SQLAuthDAO();
     }
 
