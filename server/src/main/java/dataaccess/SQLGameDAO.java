@@ -158,8 +158,6 @@ public class SQLGameDAO implements GameDAO {
         ArrayList<GameData> games = new ArrayList<>();
         String queryStmt = String.format("SELECT * FROM %s", GAME_TABLE_NAME);
         try (PreparedStatement ps = conn.prepareStatement(queryStmt)) {
-
-            // Executing the query and retrieving the result set
             ResultSet resultSet = ps.executeQuery();
 
             // Checking if the result set has any rows
@@ -180,10 +178,10 @@ public class SQLGameDAO implements GameDAO {
     }
 
     /**
-     *
-     * @param gameID
-     * @return
-     * @throws SQLException
+     * Retrieve a chess game object from the database.
+     * @param gameID is used for the lookup of the requested chess game.
+     * @return the ChessGame object from the database with the corresponding game ID.
+     * @throws SQLException if there is an error accessing the database.
      */
     public ChessGame getChessGameFromDatabase(int gameID) throws DataAccessException {
         // Make query statement to get all entries

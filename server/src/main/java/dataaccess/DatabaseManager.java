@@ -40,10 +40,10 @@ public class DatabaseManager {
      */
     static void createDatabase() throws DataAccessException {
         try {
-            var statement = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME;
-            var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
-            try (var preparedStatement = conn.prepareStatement(statement)) {
-                preparedStatement.executeUpdate();
+            String statement = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME;
+            Connection conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                ps.executeUpdate();
             }
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
