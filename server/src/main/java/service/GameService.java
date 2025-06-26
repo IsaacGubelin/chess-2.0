@@ -59,7 +59,7 @@ public class GameService {
     }
 
     private void joinToTeam(JoinGameRequest joinRequest, String name) throws DataAccessException, ResponseException {
-        String color = joinRequest.playerColor();
+        String color = joinRequest.playerColor().toString();
         int gameID = joinRequest.gameID();
         if (color.equals(BLACK_TEAM)) {
             if (!gameDAO.hasAvailableBlackTeam(gameID))

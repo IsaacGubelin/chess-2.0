@@ -18,6 +18,7 @@ public class ChessGame {
         board = new ChessBoard();
         board.resetBoard();
         teamTurn = TeamColor.WHITE;
+        gameOver = false;
         whiteKingLocation = new ChessPosition(1, 5);
         blackKingLocation = new ChessPosition(8, 5);
     }
@@ -29,6 +30,7 @@ public class ChessGame {
     private ChessGame.TeamColor teamTurn;
     private ChessPosition whiteKingLocation; // Check these positions each turn for check/stalemate
     private ChessPosition blackKingLocation;
+    private boolean gameOver;
 
     /**
      * @return Which team's turn it is
@@ -115,6 +117,7 @@ public class ChessGame {
         updateKingLoc(move, movePiece); // Check if piece was a king and update its location
         validatePromotion(move); // Assert promotion if pawn reaches end of board
 
+        // TODO: Assert if game is over using checkmate/stalemate rules. Flip turn if not over. Set gameOver if over.
         flipTeamTurn();
     }
 
@@ -147,7 +150,7 @@ public class ChessGame {
     }
 
     /**
-     * Flips the team turn
+     * Flips the team turn. Performed after each move.
      */
     private void flipTeamTurn() {
         teamTurn = (teamTurn == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;

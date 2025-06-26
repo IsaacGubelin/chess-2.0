@@ -150,6 +150,9 @@ public class BoardDisplay {
             System.out.print(SET_BG_COLOR_DARK_GREEN);     // Brown
     }
 
+    //TODO:
+    // Test the board drawer using this main method
+    // Delete when development is done
     public static void main(String[] args) {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Client: " + piece);

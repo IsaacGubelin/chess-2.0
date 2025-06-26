@@ -2,6 +2,7 @@ package server;
 
 import dataaccess.*;
 import handler.*;
+import server.websocket.WebSocketHandler;
 import spark.*;
 
 public class Server {
@@ -9,6 +10,8 @@ public class Server {
     public SQLUserDAO userDAO;
     public SQLGameDAO gameDAO;
     public SQLAuthDAO authDAO;
+
+    private final WebSocketHandler socketHandler = new WebSocketHandler();
 
     public Server() {
         userDAO = new SQLUserDAO();
@@ -26,6 +29,8 @@ public class Server {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
+
+        Spark.webSocket("/connect", socketHandler);
 
 
         // CLEAR APPLICATION
