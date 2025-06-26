@@ -39,8 +39,8 @@ public class Repl {
      * <p>
      * Received messages from the WebSocket facade will be printed in this class.
      *
-     * @param url
-     * @throws ResponseException
+     * @param url holds url for websocket connection
+     * @throws ResponseException if the server is unreachable or returns an error
      */
     public Repl(String url) throws ResponseException {
         msgHandler = new ServiceMessageHandler() {  // in-line implementation for needed functions
@@ -89,7 +89,7 @@ public class Repl {
             int numArgs = inputs.length;
             inputs[0] = inputs[0].toLowerCase();                        // Ignore capitals of first argument
 
-
+            System.out.println();
             switch (status) {                                        // State machine for user interface options
                 case LOGGED_OUT -> promptLoggedOut(inputs, numArgs);
                 case LOGGED_IN -> promptLoggedIn(inputs, numArgs);
@@ -449,6 +449,7 @@ public class Repl {
     }
 
     private void printHelpScreenLoggedOut() {
+        clearScreen();
         setTextToPromptFormat();
         System.out.println("register <USERNAME> <PASSWORD> <EMAIL>" + RESET_TEXT_BOLD_FAINT + " --> create an account");
         setTextToPromptFormat();
@@ -458,7 +459,9 @@ public class Repl {
     }
 
     private void printHelpScreenLoggedIn() {
+        clearScreen();
         setTextToPromptFormat();
+
         System.out.println("create <GAME_NAME>" + RESET_TEXT_BOLD_FAINT + " --> make a new game");
         setTextToPromptFormat();
         System.out.println("list" + RESET_TEXT_BOLD_FAINT + " --> Show list of games");
@@ -494,9 +497,19 @@ public class Repl {
     }
 
 
+    /**
+     * Calls unicode escape sequences to make command prompt text italicized and green
+     */
 
-    // Calls unicode escape sequences to make command prompt text italicized and green
     private void setTextToPromptFormat() {
         System.out.print(SET_TEXT_BOLD + SET_TEXT_ITALIC + SET_TEXT_COLOR_BLUE);
+    }
+
+    /**
+     * Clear the console
+     */
+    private void clearScreen() {
+        System.out.print(ERASE_SCREEN); // ANSI escape sequence to clear the screen
+        System.out.flush();              // Flush the output stream
     }
 }
